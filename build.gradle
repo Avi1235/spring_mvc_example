@@ -1,0 +1,44 @@
+plugins {
+    id 'java'
+    id 'war'
+    id 'com.bmuschko.tomcat' version '2.5'
+}
+
+group = 'jd'
+version = '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    def tomcatVersion = '8.5.16'
+    tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
+            "org.apache.tomcat.embed:tomcat-embed-logging-juli:8.5.2",
+            "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
+
+    providedCompile 'javax.servlet:javax.servlet-api:4.0.1'
+    implementation 'org.springframework:spring-webmvc:5.3.0'
+    // https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator
+    implementation 'org.hibernate.validator:hibernate-validator:6.0.8.Final'
+
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+tomcat {
+    httpProtocol = 'org.apache.coyote.http11.Http11Nio2Protocol'
+    ajpProtocol  = 'org.apache.coyote.ajp.AjpNio2Protocol'
+    contextPath = "/random-${version}"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+war {
+    webAppDirectory = file('src/main/webapp')
+
+    archiveBaseName = "random"
+
+}
